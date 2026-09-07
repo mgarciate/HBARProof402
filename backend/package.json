@@ -1,0 +1,56 @@
+{
+  "name": "fieldproof402-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "worker:dev": "tsx watch src/worker.ts",
+    "build": "tsc",
+    "start": "node dist/src/server.js",
+    "worker": "node dist/src/worker.js",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "seed": "tsx scripts/seed.ts",
+    "hedera:topic": "tsx scripts/create-topic.ts",
+    "demo": "tsx scripts/demo.ts",
+    "receipt": "tsx scripts/receipt.ts",
+    "x402:buy": "tsx scripts/buy-verification.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:integration": "RUN_INTEGRATION=1 vitest run test/integration.test.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@aws-sdk/s3-request-presigner": "^3.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "@fastify/swagger": "^9.0.0",
+    "@fastify/swagger-ui": "^6.1.1",
+    "@hiero-ledger/sdk": "2.85.0",
+    "@x402/core": "2.25.0",
+    "@x402/hedera": "2.25.0",
+    "dotenv": "^16.0.0",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.0.0",
+    "canonicalize": "^2.1.0",
+    "json-bigint": "^1.0.0",
+    "pg": "^8.0.0",
+    "protobufjs": "^8.8.0",
+    "sharp": "^0.35.4",
+    "zod": "^3.25.0",
+    "zod-to-json-schema": "^3.24.0"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.4",
+    "protobufjs@8.0.1": "^8.8.0",
+    "protobufjs@8.2.0": "^8.8.0",
+    "ws@8.17.1": "^8.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

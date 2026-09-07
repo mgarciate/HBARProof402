@@ -1,0 +1,64 @@
+name: fieldproof402
+x-app: &app
+  build: .
+  env_file: .env
+  environment:
+    DATABASE_URL: postgres://fieldproof:${POSTGRES_PASSWORD:-local-only-password}@postgres:5432/fieldproof
+    OBJECT_STORAGE_ENDPOINT: http://minio:9000
+    AGENT_HEDERA_PRIVATE_KEY: ""
+    AGENT_HEDERA_ACCOUNT_ID: ""
+  restart: unless-stopped
+  depends_on:
+    postgres: { condition: service_healthy }
+    storage-init: { condition: service_completed_successfully }
+    migrate: { condition: service_completed_successfully }
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fieldproof
+      POSTGRES_USER: fieldproof
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-only-password}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U fieldproof"], interval: 3s, timeout: 3s, retries: 20 }
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY:-fieldproof}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORAGE_SECRET_KEY:-local-only-storage-password}
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    volumes: ["object-data:/data"]
+  storage-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    depends_on: [minio]
+    environment:
+      STORAGE_USER: ${OBJECT_STORAGE_ACCESS_KEY:-fieldproof}
+      STORAGE_PASSWORD: ${OBJECT_STORAGE_SECRET_KEY:-local-only-storage-password}
+      STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:-fieldproof}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        until mc alias set local http://minio:9000 "$${STORAGE_USER}" "$${STORAGE_PASSWORD}"; do sleep 1; done;
+        mc mb --ignore-existing "local/$${STORAGE_BUCKET}" &&
+        mc anonymous set none "local/$${STORAGE_BUCKET}"
+  migrate:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://fieldproof:${POSTGRES_PASSWORD:-local-only-password}@postgres:5432/fieldproof
+      AGENT_HEDERA_PRIVATE_KEY: ""
+      AGENT_HEDERA_ACCOUNT_ID: ""
+    depends_on:
+      postgres: { condition: service_healthy }
+    command: ["node", "dist/scripts/migrate.js"]
+  api:
+    <<: *app
+    ports: ["127.0.0.1:3000:3000"]
+  worker:
+    <<: *app
+    command: ["node", "dist/src/worker.js"]
+volumes:
+  postgres-data:
+  object-data:

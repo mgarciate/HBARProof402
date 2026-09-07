@@ -1,0 +1,10 @@
+{$API_DOMAIN} {
+    reverse_proxy api:3000
+}
+
+{$STORAGE_DOMAIN} {
+    request_body {
+        max_size 10MB
+    }
+    reverse_proxy minio:9000
+}

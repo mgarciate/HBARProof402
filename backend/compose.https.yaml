@@ -1,0 +1,16 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?Set API_DOMAIN}
+      STORAGE_DOMAIN: ${STORAGE_DOMAIN:?Set STORAGE_DOMAIN}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [api, minio]
+volumes:
+  caddy-data:
+  caddy-config:

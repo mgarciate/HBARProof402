@@ -1,0 +1,11 @@
+# Privacy and retention
+
+Photographs are private off-chain JPEGs. Before uploading, the iPhone must obtain consent, remove EXIF/XMP/IPTC and hash the resulting bytes. The backend rejects metadata-bearing files rather than changing the bytes after hashing. The demo script performs the same sanitization.
+
+Evidence images are normally deleted seven days after accepted submission. An authorized x402 purchase pins its evidence until verification completes or payment conclusively fails; ambiguous or blocked payments can therefore extend retention and require operator review. Unsigned quotes do not extend retention. Staging uploads and uncommitted private copies are removed after 24 hours. Cleanup runs in the worker approximately every 30 seconds and retries on storage failures; availability of the worker/storage determines actual deletion time. Bucket backups must follow an equivalent retention policy. This code does not erase external backups.
+
+Task specifications, claims, structured answers, hashes, verification results and transaction references remain in PostgreSQL for the demo lifetime. This release has no self-service account/data deletion endpoint. Treat instructions and asset IDs as potentially sensitive when authoring tasks; list responses include them for available tasks.
+
+HCS contains only task/event IDs, hashes, policy/version, reward/expiry and minimal result fields. It never contains photographs, signed URLs, QR plaintext, answers, names, location, device identifiers or auth tokens. Hashes and receipts remain public even after file deletion. HBAR transfers necessarily expose payer and recipient account IDs on the public testnet.
+
+Mock verification reads no external AI provider and sends no images to one. Blocky402 receives payment requirements, the API resource URL containing the purchase UUID, and signed transaction bytes; it does not receive photographs or structured answers. The public transfer memo contains the purchase UUID, not personal data. Signed authorizations and settlement records remain in PostgreSQL, and the agent CLI retains its private local recovery journal. Mirror Node receives lookup identifiers only. Account existence checks do not establish ownership or identity of the collaborator's chosen account.
