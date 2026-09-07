@@ -6,6 +6,7 @@ import type { PaymentRequired, PaymentRequirements } from '@x402/core/types';
 import { Blocky402Facilitator, decodeAuthorization, inspectAuthorization, matchesPaymentTransfer } from '../src/x402-protocol.js';
 import { purchaseSigner, selectRequirements, signPurchase } from '../src/x402-client.js';
 import { hcsEventSchema, sha256 } from '../src/domain.js';
+import { preflight } from '../scripts/x402-preflight.js';
 
 function quote(): PaymentRequired {
   const id = randomUUID();
@@ -87,5 +88,47 @@ describe('Blocky402 HTTP adapter', () => {
     await expect(adapter.supported('https://facilitator.test')).rejects.toThrow('advertise');
     await expect(adapter.settle('https://facilitator.test', {} as any, {} as PaymentRequirements)).rejects.toThrow();
     await expect(adapter.supported('https://facilitator.test')).rejects.toThrow('Blocky402');
+  });
+});
+
+describe('real testnet preflight', () => {
+  function fixture() {
+    const operator = PrivateKey.generateED25519(), agent = PrivateKey.generateED25519();
+    const environment = {
+      HEDERA_NETWORK: 'testnet', HEDERA_OPERATOR_ID: '0.0.100', HEDERA_OPERATOR_KEY: operator.toStringDer(), HEDERA_HCS_TOPIC_ID: '0.0.200',
+      HEDERA_MIRROR_NODE_URL: 'https://mirror.test', HEDERA_FEE_RESERVE_HBAR: '2', VERIFICATION_PAYMENT_MODE: 'x402',
+      BLOCKY402_BASE_URL: 'https://blocky.test', X402_VERIFIER_PRICE_HBAR: '0.001', X402_PAY_TO_ACCOUNT_ID: '0.0.300',
+      AGENT_HEDERA_ACCOUNT_ID: '0.0.400', AGENT_HEDERA_PRIVATE_KEY: agent.toStringDer(), DEMO_PAYOUT_ACCOUNT_ID: '0.0.500',
+      AGENT_API_TOKEN: 'a'.repeat(32), WORKER_API_TOKEN: 'w'.repeat(32), API_BASE_URL: 'https://api.test',
+    };
+    const fetcher = vi.fn(async (input: string, init?: RequestInit) => {
+      const url = new URL(input);
+      if (url.hostname === 'blocky.test') return Response.json({ kinds: [
+        { x402Version: 2, scheme: 'exact', network: 'solana:devnet', extra: { feePayer: '8YmzSolanaAddress' } },
+        { x402Version: 2, scheme: 'exact', network: 'hedera:testnet', extra: { feePayer: '0.0.600' } },
+      ] });
+      if (url.pathname.startsWith('/api/v1/accounts/')) {
+        const id = url.pathname.split('/').at(-1)!;
+        const keys: Record<string, string | undefined> = { '0.0.100': operator.publicKey.toStringRaw(), '0.0.400': agent.publicKey.toStringRaw() };
+        return Response.json({ account: id, balance: { balance: id === '0.0.100' ? 300_000_000 : 1_000_000 }, ...(keys[id] ? { key: { key: keys[id] } } : {}) });
+      }
+      if (url.pathname.startsWith('/api/v1/topics/')) return Response.json({ topic_id: '0.0.200' });
+      if (url.pathname === '/health/ready') return Response.json({ status: 'ready' });
+      if (url.pathname === '/v1/me') return Response.json({ role: (init?.headers as Record<string, string> | undefined)?.Authorization?.endsWith('a'.repeat(32)) ? 'agent' : 'worker' });
+      return new Response('', { status: 404 });
+    }) as typeof fetch;
+    return { environment, operator, agent, fetcher };
+  }
+  it('checks public keys, balances, roles, topic and dynamic facilitator before signing', async () => {
+    const { environment, fetcher } = fixture();
+    const report = await preflight(environment, fetcher);
+    expect(report).toMatchObject({ network: 'hedera:testnet', facilitatorFeePayer: '0.0.600', priceTinybars: '100000', apiReady: true, seededRoles: ['agent', 'worker'] });
+    expect(report.accounts.find(account => account.role === 'agent')).toMatchObject({ id: '0.0.400', keyMatched: true });
+    expect(JSON.stringify(report)).not.toContain(environment.AGENT_HEDERA_PRIVATE_KEY);
+  });
+  it('fails closed when a private key does not belong to its configured account', async () => {
+    const { environment, fetcher } = fixture();
+    environment.AGENT_HEDERA_PRIVATE_KEY = PrivateKey.generateED25519().toStringDer();
+    await expect(preflight(environment, fetcher)).rejects.toThrow('PREFLIGHT_PRIVATE_KEY_MISMATCH:agent');
   });
 });

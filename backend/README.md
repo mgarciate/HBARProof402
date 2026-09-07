@@ -15,6 +15,7 @@ Requires Node.js 22.12+ (or Docker), Docker Compose, a funded Hedera testnet ope
 5. Set `X402_PAY_TO_ACCOUNT_ID` to the verifier's testnet account and configure the separate agent credentials as described in [x402 setup](docs/x402.md). Alternatively, set `VERIFICATION_PAYMENT_MODE=free_mock` for an unpaid verification demo. Run `docker compose up -d --build`. Database migrations run before the API and worker start. The storage initializer creates a private bucket.
 6. Run `docker compose exec api node dist/scripts/seed.js` once. It prints the principal IDs, never tokens. Reusing the same tokens is idempotent; changing a token adds a principal and does not revoke the previous one.
 7. Check `http://localhost:3000/health/ready` and the interactive OpenAPI docs at `http://localhost:3000/docs`.
+8. Run `npm run x402:preflight`. It performs read-only account, key, balance, topic, API-role and facilitator checks without printing secrets. Resolve every failure before allowing the CLI to sign.
 
 For native development, start only dependencies with `docker compose up -d postgres storage-init`, then run `npm run db:migrate`, `npm run seed`, `npm run dev` and `npm run worker:dev` in separate terminals. Configure `OBJECT_STORAGE_PUBLIC_ENDPOINT` to an address reachable by the iPhone, not `localhost` on that phone. It must reach the same bucket as the internal endpoint.
 

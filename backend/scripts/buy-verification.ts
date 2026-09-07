@@ -14,7 +14,8 @@ import { inspectAuthorization, paymentPayloadSchema } from '../src/x402-protocol
 
 type Journal = { taskId: string; apiBase: string; key: string; paymentId: string; payload: PaymentPayload };
 export async function buyVerification(taskId: string): Promise<any> {
-  loadEnv({ path: '.env.agent' });
+  // Agent-only values intentionally override blank placeholders loaded from .env.
+  loadEnv({ path: '.env.agent', override: true });
   z.string().uuid().parse(taskId);
   const apiBase = z.string().url().parse(process.env.API_BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
   const token = z.string().min(32).parse(process.env.AGENT_API_TOKEN);

@@ -16,6 +16,7 @@
     "demo": "tsx scripts/demo.ts",
     "receipt": "tsx scripts/receipt.ts",
     "x402:buy": "tsx scripts/buy-verification.ts",
+    "x402:preflight": "tsx scripts/x402-preflight.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:integration": "RUN_INTEGRATION=1 vitest run test/integration.test.ts"
