@@ -73,7 +73,10 @@ actor APIClient {
     }
 
     private func makeURLRequest<Response>(from request: APIRequest<Response>) -> URLRequest {
-        var urlRequest = URLRequest(url: baseURL.appending(path: request.path))
+        guard let url = URL(string: request.path, relativeTo: baseURL)?.absoluteURL else {
+            preconditionFailure("API request paths must be valid relative URLs.")
+        }
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.httpBody = request.body
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")

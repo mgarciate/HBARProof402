@@ -41,11 +41,13 @@ struct FieldProofTests {
         )
 
         try store.save(draft)
-        let restored = try #require(store.load())
+        let loadedDraft = try store.load()
+        let restored = try #require(loadedDraft)
 
         #expect(restored == draft)
         try store.clear()
-        #expect(try store.load() == nil)
+        let clearedDraft = try store.load()
+        #expect(clearedDraft == nil)
     }
 
     @Test
@@ -57,6 +59,8 @@ struct FieldProofTests {
                 return $0
             }
             #expect(request.value(forHTTPHeaderField: "Idempotency-Key") == "stable-key")
+            #expect(request.url?.path == "/v1/tasks")
+            #expect(request.url?.query == nil)
             let status = currentAttempt < 3 ? 500 : 200
             let data = status == 200 ? Data(#"{"value":"ok"}"#.utf8) : Data(#"{"message":"temporary"}"#.utf8)
             return (status, data)

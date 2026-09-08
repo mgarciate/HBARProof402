@@ -32,7 +32,7 @@ struct AvailableTasksView: View {
             }
             .navigationTitle("FieldProof402")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Label("Hedera testnet", systemImage: "network")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -100,7 +100,13 @@ struct PayoutAccountView: View {
             }
 
             Section("Payout Account") {
-                TextField("0.0.123456", text: $model.payoutAccount)
+                TextField(
+                    "0.0.123456",
+                    text: Binding(
+                        get: { model.payoutAccount },
+                        set: model.updatePayoutAccount
+                    )
+                )
                     .textContentType(.none)
 #if os(iOS)
                     .keyboardType(.numbersAndPunctuation)

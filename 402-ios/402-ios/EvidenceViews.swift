@@ -48,7 +48,6 @@ struct QRStepView: View {
         }
         .padding()
         .navigationTitle("QR Code")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

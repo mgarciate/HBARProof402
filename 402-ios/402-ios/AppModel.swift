@@ -94,6 +94,11 @@ final class AppModel {
         persistDraft()
     }
 
+    func updatePayoutAccount(_ value: String) {
+        payoutAccount = value
+        persistDraft()
+    }
+
     func updateVisibleDamage(_ value: Bool) {
         visibleDamage = value
         persistDraft()

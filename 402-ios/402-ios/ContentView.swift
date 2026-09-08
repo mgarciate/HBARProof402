@@ -48,7 +48,7 @@ struct ContentView: View {
             content()
                 .toolbar {
                     if model.phase != .submission && model.phase != .result {
-                        ToolbarItem(placement: .topBarLeading) {
+                        ToolbarItem(placement: .cancellationAction) {
                             Button("Cancel", systemImage: "xmark") {
                                 model.reset()
                             }
