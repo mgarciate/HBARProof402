@@ -32,13 +32,20 @@ nonisolated enum APIClientError: LocalizedError, Equatable {
 
 actor APIClient {
     private let baseURL: URL
+    private let bearerToken: String?
     private let session: URLSession
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
     private let maximumAttempts: Int
 
-    init(baseURL: URL, session: URLSession = .shared, maximumAttempts: Int = 3) {
+    init(
+        baseURL: URL,
+        bearerToken: String? = nil,
+        session: URLSession = .shared,
+        maximumAttempts: Int = 3
+    ) {
         self.baseURL = baseURL
+        self.bearerToken = bearerToken
         self.session = session
         self.maximumAttempts = max(1, maximumAttempts)
         encoder = JSONEncoder()
@@ -82,6 +89,9 @@ actor APIClient {
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         if request.body != nil {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        if let bearerToken {
+            urlRequest.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         }
         request.headers.forEach { urlRequest.setValue($0.value, forHTTPHeaderField: $0.key) }
         return urlRequest

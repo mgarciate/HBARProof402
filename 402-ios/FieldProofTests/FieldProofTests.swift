@@ -59,6 +59,7 @@ struct FieldProofTests {
                 return $0
             }
             #expect(request.value(forHTTPHeaderField: "Idempotency-Key") == "stable-key")
+            #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer test-token")
             #expect(request.url?.path == "/v1/tasks")
             #expect(request.url?.query == nil)
             let status = currentAttempt < 3 ? 500 : 200
@@ -67,7 +68,12 @@ struct FieldProofTests {
         }
         defer { URLProtocolStub.handler = nil }
 
-        let client = APIClient(baseURL: URL(string: "https://fieldproof.test")!, session: stubSession(), maximumAttempts: 3)
+        let client = APIClient(
+            baseURL: URL(string: "https://fieldproof.test")!,
+            bearerToken: "test-token",
+            session: stubSession(),
+            maximumAttempts: 3
+        )
         let response: TestResponse = try await client.send(
             APIRequest(
                 method: .get,
@@ -101,6 +107,29 @@ struct FieldProofTests {
         }
 
         #expect(attempts.withLock { $0 } == 1)
+    }
+
+    @Test
+    func signedUploadDoesNotReceiveMarketplaceBearerToken() async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.httpMethod == "PUT")
+            #expect(request.value(forHTTPHeaderField: "Authorization") == nil)
+            return (200, Data())
+        }
+        defer { URLProtocolStub.handler = nil }
+
+        let client = APIClient(
+            baseURL: URL(string: "https://fieldproof.test")!,
+            bearerToken: "test-token",
+            session: stubSession(),
+            maximumAttempts: 1
+        )
+
+        try await client.upload(
+            Data([1, 2, 3]),
+            to: URL(string: "https://storage.test/upload")!,
+            contentType: "image/jpeg"
+        )
     }
 
     @MainActor

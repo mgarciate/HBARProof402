@@ -29,7 +29,10 @@ final class AppModel {
 
     convenience init() {
         let configuration = AppConfiguration.live
-        let client = APIClient(baseURL: configuration.apiBaseURL)
+        let client = APIClient(
+            baseURL: configuration.apiBaseURL,
+            bearerToken: configuration.workerAPIToken
+        )
         let service = LiveFieldProofService(client: client, workerID: configuration.workerID)
         self.init(service: service, draftStore: FileDraftStore())
     }
