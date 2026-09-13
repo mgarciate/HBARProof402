@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">FieldProof402 end-to-end architecture</title>
+  <desc id="desc">A requester agent creates a task, a field worker captures evidence, x402 pays for verification, and Hedera records receipts and rewards.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#13213a"/></linearGradient>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8257ff"/><stop offset="1" stop-color="#5a34d6"/></linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#36e3b4"/><stop offset="1" stop-color="#13a984"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-opacity=".28"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0l12 6-12 6z" fill="#91a4c8"/></marker>
+    <style>
+      .title{font:700 54px Inter,Arial,sans-serif;fill:#fff}.subtitle{font:400 23px Inter,Arial,sans-serif;fill:#9fb1cf}
+      .box{fill:#162640;stroke:#344968;stroke-width:2;rx:24;filter:url(#shadow)}.head{font:700 26px Inter,Arial,sans-serif;fill:#fff}.body{font:400 19px Inter,Arial,sans-serif;fill:#bdc9dd}.tag{font:700 15px Inter,Arial,sans-serif;letter-spacing:1.6px;fill:#07111f}.line{fill:none;stroke:#91a4c8;stroke-width:4;marker-end:url(#arrow)}.label{font:600 17px Inter,Arial,sans-serif;fill:#dce5f5}.foot{font:400 17px Inter,Arial,sans-serif;fill:#8195b6}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1430" cy="110" r="250" fill="#8257ff" opacity=".08"/><circle cx="180" cy="790" r="280" fill="#36e3b4" opacity=".06"/>
+  <text x="90" y="92" class="title">FieldProof402</text>
+  <text x="90" y="132" class="subtitle">Agents request. People inspect. Hedera makes the workflow auditable.</text>
+
+  <rect x="90" y="220" width="310" height="205" class="box"/>
+  <rect x="116" y="246" width="92" height="30" rx="15" fill="url(#purple)"/><text x="134" y="267" class="tag">REQUEST</text>
+  <text x="116" y="316" class="head">Requester agent</text>
+  <text x="116" y="353" class="body"><tspan x="116">Creates a structured task</tspan><tspan x="116" dy="29">Sets reward, deadline</tspan><tspan x="116" dy="29">and verification budget</tspan></text>
+
+  <rect x="645" y="192" width="310" height="260" class="box"/>
+  <rect x="671" y="218" width="94" height="30" rx="15" fill="url(#mint)"/><text x="690" y="239" class="tag">CORE API</text>
+  <text x="671" y="290" class="head">Marketplace backend</text>
+  <text x="671" y="327" class="body"><tspan x="671">Fastify + PostgreSQL</tspan><tspan x="671" dy="29">State machine + durable jobs</tspan><tspan x="671" dy="29">Private S3 evidence</tspan><tspan x="671" dy="29">Idempotent orchestration</tspan></text>
+
+  <rect x="1200" y="220" width="310" height="205" class="box"/>
+  <rect x="1226" y="246" width="112" height="30" rx="15" fill="#f0bd4f"/><text x="1246" y="267" class="tag">INSPECTION</text>
+  <text x="1226" y="316" class="head">Field worker</text>
+  <text x="1226" y="353" class="body"><tspan x="1226">Claims the task</tspan><tspan x="1226" dy="29">Scans QR + takes photos</tspan><tspan x="1226" dy="29">Submits hashed evidence</tspan></text>
+
+  <path d="M400 320H630" class="line"/><text x="456" y="300" class="label">task + budget</text>
+  <path d="M1200 320H970" class="line"/><text x="1006" y="300" class="label">claim + evidence</text>
+
+  <rect x="90" y="590" width="390" height="190" class="box"/>
+  <text x="116" y="638" class="head">x402 + Blocky402</text>
+  <text x="116" y="675" class="body"><tspan x="116">402 challenge → signed HBAR</tspan><tspan x="116" dy="29">authorization → settlement</tspan><tspan x="116" dy="29">Pay-per-verification, no subscription</tspan></text>
+
+  <rect x="605" y="590" width="390" height="190" class="box"/>
+  <text x="631" y="638" class="head">Verification service</text>
+  <text x="631" y="675" class="body"><tspan x="631">Checks QR, files and duplicates</tspan><tspan x="631" dy="29">Returns APPROVED / REJECTED</tspan><tspan x="631" dy="29">Visual analysis is currently mock</tspan></text>
+
+  <rect x="1120" y="560" width="390" height="250" class="box" stroke="#6849d9"/>
+  <text x="1146" y="608" class="head">Hedera Testnet</text>
+  <text x="1146" y="645" class="body"><tspan x="1146">x402 HBAR settlement</tspan><tspan x="1146" dy="29">Worker HBAR reward</tspan><tspan x="1146" dy="29">HCS audit events</tspan><tspan x="1146" dy="29">Mirror Node + HashScan receipt</tspan></text>
+
+  <path d="M665 452C610 505 470 520 370 577" class="line"/><text x="430" y="505" class="label">buy verification</text>
+  <path d="M480 685H590" class="line"/>
+  <path d="M995 685H1105" class="line"/>
+  <path d="M955 400C1080 435 1205 470 1260 545" class="line"/><text x="1025" y="445" class="label">events + reward</text>
+
+  <text x="90" y="852" class="foot">Current demo: real x402 settlement, HCS records and HBAR reward on Testnet; rule-based mock visual decision.</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">FieldProof402 two-payment flow</title>
+  <desc id="desc">The requester agent pays the verifier through x402, while the marketplace operator separately rewards the field worker after approval.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7f9fd"/><stop offset="1" stop-color="#e9eef8"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#23324d" flood-opacity=".14"/></filter>
+    <marker id="purpleArrow" markerWidth="13" markerHeight="13" refX="11" refY="6.5" orient="auto"><path d="M0 0l13 6.5L0 13z" fill="#6f4bf2"/></marker>
+    <marker id="greenArrow" markerWidth="13" markerHeight="13" refX="11" refY="6.5" orient="auto"><path d="M0 0l13 6.5L0 13z" fill="#0f9c76"/></marker>
+    <style>
+      .title{font:700 52px Inter,Arial,sans-serif;fill:#13213a}.subtitle{font:400 23px Inter,Arial,sans-serif;fill:#526581}
+      .card{fill:#fff;stroke:#d7dfec;stroke-width:2;rx:24;filter:url(#shadow)}.head{font:700 27px Inter,Arial,sans-serif;fill:#17243a}.body{font:400 19px Inter,Arial,sans-serif;fill:#5a6c86}.small{font:600 16px Inter,Arial,sans-serif;fill:#6c7d96}.amount{font:800 32px Inter,Arial,sans-serif}.step{font:700 17px Inter,Arial,sans-serif;fill:#fff}.divider{stroke:#cbd5e5;stroke-width:2;stroke-dasharray:9 9}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="90" y="90" class="title">One task, two separate payments</text>
+  <text x="90" y="132" class="subtitle">Paying for verification and rewarding the field worker are independent economic operations.</text>
+  <line x1="800" y1="180" x2="800" y2="810" class="divider"/>
+
+  <text x="90" y="205" class="small" fill="#6f4bf2">PAYMENT 1 · BEFORE ANALYSIS</text>
+  <rect x="90" y="240" width="260" height="155" class="card"/>
+  <circle cx="132" cy="282" r="20" fill="#6f4bf2"/><text x="126" y="289" class="step">1</text>
+  <text x="120" y="333" class="head">Requester agent</text><text x="120" y="369" class="body">Own funded account</text>
+  <rect x="470" y="240" width="260" height="155" class="card"/>
+  <circle cx="512" cy="282" r="20" fill="#6f4bf2"/><text x="506" y="289" class="step">2</text>
+  <text x="500" y="333" class="head">Blocky402</text><text x="500" y="369" class="body">Verifies + settles</text>
+  <path d="M350 317H455" fill="none" stroke="#6f4bf2" stroke-width="5" marker-end="url(#purpleArrow)"/>
+  <text x="367" y="296" class="amount" fill="#6f4bf2">0.001 HBAR</text>
+  <rect x="280" y="470" width="260" height="155" class="card"/>
+  <circle cx="322" cy="512" r="20" fill="#6f4bf2"/><text x="316" y="519" class="step">3</text>
+  <text x="310" y="563" class="head">Verifier account</text><text x="310" y="599" class="body">Receives usage fee</text>
+  <path d="M600 395C600 450 545 500 555 535" fill="none" stroke="#6f4bf2" stroke-width="5" marker-end="url(#purpleArrow)"/>
+  <rect x="145" y="690" width="540" height="96" rx="18" fill="#ede8ff"/>
+  <text x="175" y="730" class="head" fill="#5637cf">Payment unlocks verification</text>
+  <text x="175" y="761" class="body">A rejection still consumes the purchased analysis.</text>
+
+  <text x="880" y="205" class="small" fill="#0f9c76">PAYMENT 2 · ONLY AFTER APPROVAL</text>
+  <rect x="880" y="240" width="260" height="155" class="card"/>
+  <circle cx="922" cy="282" r="20" fill="#0f9c76"/><text x="916" y="289" class="step">1</text>
+  <text x="910" y="333" class="head">Marketplace</text><text x="910" y="369" class="body">Operator account</text>
+  <rect x="1260" y="240" width="260" height="155" class="card"/>
+  <circle cx="1302" cy="282" r="20" fill="#0f9c76"/><text x="1296" y="289" class="step">2</text>
+  <text x="1290" y="333" class="head">Field worker</text><text x="1290" y="369" class="body">Claimed 0.0.x account</text>
+  <path d="M1140 317H1245" fill="none" stroke="#0f9c76" stroke-width="5" marker-end="url(#greenArrow)"/>
+  <text x="1155" y="296" class="amount" fill="#0f9c76">0.1 HBAR</text>
+  <rect x="1035" y="470" width="330" height="155" class="card"/>
+  <text x="1065" y="520" class="head">Confirmation gate</text>
+  <text x="1065" y="557" class="body"><tspan x="1065">APPROVED → transfer</tspan><tspan x="1065" dy="29">confirmed → PAID</tspan></text>
+  <path d="M1010 395C1010 440 1080 460 1100 470" fill="none" stroke="#0f9c76" stroke-width="5" marker-end="url(#greenArrow)"/>
+  <rect x="925" y="690" width="540" height="96" rx="18" fill="#dbf7ef"/>
+  <text x="955" y="730" class="head" fill="#087b5c">Rejected or manual review?</text>
+  <text x="955" y="761" class="body">No worker reward is created or submitted.</text>
+
+  <text x="800" y="855" text-anchor="middle" class="small">Database uniqueness + durable signed bytes prevent duplicate charges and rewards.</text>
+</svg>

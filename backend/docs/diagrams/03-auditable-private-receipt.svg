@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">FieldProof402 privacy and audit receipt</title>
+  <desc id="desc">Private photos stay off-chain while hashes, results, transaction references, and HCS events create a verifiable public receipt.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#081321"/><stop offset="1" stop-color="#111d31"/></linearGradient>
+    <linearGradient id="private" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16bd91"/><stop offset="1" stop-color="#087b61"/></linearGradient>
+    <linearGradient id="public" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b68ff"/><stop offset="1" stop-color="#5834d1"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-opacity=".3"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0l12 6-12 6z" fill="#8fa5c7"/></marker>
+    <style>
+      .title{font:700 52px Inter,Arial,sans-serif;fill:#fff}.subtitle{font:400 23px Inter,Arial,sans-serif;fill:#9db0ce}.zone{fill:#14243b;stroke:#314664;stroke-width:2;rx:28}.card{fill:#1b2d47;stroke:#39506f;stroke-width:2;rx:18;filter:url(#shadow)}.head{font:700 25px Inter,Arial,sans-serif;fill:#fff}.body{font:400 18px Inter,Arial,sans-serif;fill:#bdc9dc}.label{font:700 15px Inter,Arial,sans-serif;letter-spacing:1.8px;fill:#fff}.line{fill:none;stroke:#8fa5c7;stroke-width:4;marker-end:url(#arrow)}.check{font:700 18px Inter,Arial,sans-serif;fill:#46deb7}.never{font:700 18px Inter,Arial,sans-serif;fill:#ff8a8a}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="90" y="90" class="title">Private evidence, public proof</text>
+  <text x="90" y="132" class="subtitle">The receipt proves workflow integrity without putting photographs or personal data on-chain.</text>
+
+  <rect x="75" y="190" width="640" height="585" class="zone"/>
+  <rect x="105" y="220" width="150" height="34" rx="17" fill="url(#private)"/><text x="129" y="243" class="label">OFF-CHAIN</text>
+  <text x="105" y="305" class="head">Private evidence zone</text>
+  <rect x="105" y="345" width="250" height="145" class="card"/>
+  <text x="130" y="388" class="head">iPhone capture</text>
+  <text x="130" y="425" class="body"><tspan x="130">QR + two JPEGs</tspan><tspan x="130" dy="27">Metadata removed</tspan><tspan x="130" dy="27">SHA-256 calculated</tspan></text>
+  <rect x="435" y="345" width="250" height="145" class="card"/>
+  <text x="460" y="388" class="head">Private S3</text>
+  <text x="460" y="425" class="body"><tspan x="460">Short-lived upload URLs</tspan><tspan x="460" dy="27">Validated image bytes</tspan><tspan x="460" dy="27">Seven-day retention</tspan></text>
+  <path d="M355 418H420" class="line"/>
+  <rect x="105" y="550" width="580" height="170" class="card"/>
+  <text x="130" y="592" class="head">Never published to Hedera</text>
+  <text x="130" y="632" class="never">× photos or signed URLs</text>
+  <text x="130" y="667" class="never">× QR plaintext, answers or device identifiers</text>
+  <text x="130" y="702" class="never">× private keys, tokens, names or precise location</text>
+
+  <rect x="885" y="190" width="640" height="585" class="zone"/>
+  <rect x="915" y="220" width="150" height="34" rx="17" fill="url(#public)"/><text x="938" y="243" class="label">AUDITABLE</text>
+  <text x="915" y="305" class="head">Hedera receipt zone</text>
+  <rect x="915" y="345" width="260" height="230" class="card"/>
+  <text x="940" y="388" class="head">HCS timeline</text>
+  <text x="940" y="430" class="check">✓ TaskCreated</text>
+  <text x="940" y="466" class="check">✓ EvidenceSubmitted</text>
+  <text x="940" y="502" class="check">✓ VerificationCompleted</text>
+  <text x="940" y="538" class="check">✓ RewardPaid</text>
+  <rect x="1235" y="345" width="260" height="230" class="card"/>
+  <text x="1260" y="388" class="head">Payment proof</text>
+  <text x="1260" y="430" class="body"><tspan x="1260">x402 transaction</tspan><tspan x="1260" dy="33">Worker reward</tspan><tspan x="1260" dy="33">Exact amounts + memos</tspan><tspan x="1260" dy="33">HashScan links</tspan></text>
+  <rect x="1010" y="625" width="390" height="95" rx="20" fill="#243a5b" stroke="#8b68ff" stroke-width="2"/>
+  <text x="1038" y="664" class="head">Verified receipt</text>
+  <text x="1038" y="697" class="body">Mirror Node recomputes every link.</text>
+  <path d="M1045 575C1045 605 1090 610 1125 625" class="line"/><path d="M1365 575C1365 605 1320 610 1285 625" class="line"/>
+
+  <path d="M715 460H870" class="line"/><rect x="738" y="416" width="110" height="34" rx="17" fill="#263b5b"/><text x="757" y="439" class="label">HASHES</text>
+  <text x="800" y="820" text-anchor="middle" class="subtitle">Delete the photo later; its cryptographic commitment and public payment history remain verifiable.</text>
+</svg>
